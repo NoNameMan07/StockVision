@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Stock Prediction 📈
 
 A Django-based web application that uses LSTM (Long Short-Term Memory) neural networks to predict stock prices for the next 7 days. The application supports both global stocks (via Yahoo Finance) and Indian stocks (NSE).
@@ -259,3 +260,7 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 ---
 
 **Happy Trading! 📊💰**
+=======
+# StockVision
+This project leverages machine learning techniques to analyze historical stock market data and predict future stock prices. By capturing trends and patterns, it provides valuable insights to help investors make informed decisions.
+>>>>>>> 593b8d109d20f886aede44296687fbb0304eef7e
