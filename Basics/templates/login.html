@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            margin-bottom: 0;
+        }
+        .hero {
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            flex-direction: column;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        .hero p {
+            font-size: 1.2rem;
+        }
+        .feature-card {
+            transition: 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        /* Login Form Styles */
+        .login-container {
+            position: relative;
+            min-height: calc(100vh - 56px); /* Adjust for navbar height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .background {
+            width: 430px;
+            height: 520px;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            left: 50%;
+            top: 50%;
+            z-index: -1;
+        }
+        .background .shape {
+            height: 200px;
+            width: 200px;
+            position: absolute;
+            border-radius: 50%;
+        }
+        .shape:first-child {
+            background: linear-gradient(#4ce1ff, #a7ff87);
+            left: -160px;
+            top: -120px;
+        }
+        .shape:last-child {
+            background: linear-gradient(to right, #fff761, #ffafaf);
+            right: -160px;
+            bottom: -120px;
+        }
+        .login-form {
+            height: 520px;
+            width: 400px;
+            background-color: rgba(63, 63, 63, 0.13);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(8,7,16,0.6);
+            padding: 50px 35px;
+            color: #000000;
+        }
+        .login-form h3 {
+            font-size: 32px;
+            font-weight: 500;
+            line-height: 42px;
+            text-align: center;
+            color: #000000;
+            margin-bottom: 30px;
+        }
+        .login-form label {
+            display: block;
+            margin-top: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #000000;
+        }
+        .login-form input {
+            display: block;
+            height: 50px;
+            width: 100%;
+            background-color: rgba(255,255,255,0.07);
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 300;
+            color: #000000;
+        }
+        .login-form input::placeholder {
+            color: #000000;
+        }
+        .login-form button {
+            margin-top: 40px;
+            width: 100%;
+            background-color: #ffffff;
+            color: #080710;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .login-form button:hover {
+            background-color: #f0f0f0;
+        }
+        .create-account {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .create-account a {
+            color: #000000;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .create-account a:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            margin-top: 20px;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">My Modelz</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'calcy' %}">Calcy</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'predict' %}">Predict</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About us</a></li>
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Signup</a></li>
+                {% endif %}
+            </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="login-container">
+        <div class="background">
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        
+        <form method="post" class="login-form">
+            <h3>Login Here</h3>
+            {% csrf_token %}
+            
+            <label for="username">
+                <i class='bx bxs-user'></i> Username
+            </label>
+            <input type="text" placeholder="" id="username" name="username" required>
+            
+            <label for="password">
+                <i class='bx bxs-lock-alt'></i> Password
+            </label>
+            <input type="password" placeholder="" id="password" name="password" required>
+
+            <button type="submit">Log In</button>
+            
+            <div class="create-account">
+                <a href="{% url 'signup' %}">Create an account</a>
+            </div>
+        </form>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger text-center">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

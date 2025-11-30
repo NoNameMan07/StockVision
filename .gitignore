@@ -1,0 +1,73 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# Database
+db.sqlite3
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ML Models (large files - exclude from git)
+*.h5
+*.keras
+scaler.pkl
+
+# Generated files
+media/
+plot.png
+*.png
+*.jpg
+*.jpeg
+
+# Django
+*.log
+staticfiles/
+local_settings.py
+
+# OS
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Cache
+*.cache
+.cache/
+cached_data/
+
+# Sensitive files
+.env.local
+*.pem
+*.key

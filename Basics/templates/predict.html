@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+            margin: 20px 0;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #fadbd8;
+            border-radius: 4px;
+        }
+        .instructions {
+            text-align: center;
+            color: #7f8c8d;
+            margin: 10px 0;
+        }
+        .results {
+            display: flex;
+            height: calc(100% - 200px);
+        }
+        .image-container {
+            width: 75%;
+            padding-right: 20px;
+        }
+        .image-container h2 {
+            text-align: center;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .right-panel {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .attributes {
+            width: 100%;
+            height: 50%;
+            padding: 10px;
+            text-align: left;
+        }
+        .metrics-container {
+            width: 100%;
+            height: 50%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            align-items: center;
+        }
+        .metric-box {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+        .metric-box h3 {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        .metric-box p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Price Prediction</h1>
+        <p class="instructions">Enter a stock symbol (e.g., AAPL, TSLA) to predict future prices.</p>
+        
+        <form method="POST" action="{% url 'predict' %}">
+            {% csrf_token %}
+            <input type="text" name="stock_name" placeholder="Enter stock symbol" required>
+            <button type="submit">Predict</button>
+        </form>
+        
+        {% if error_message %}
+            <div class="error">{{ error_message }}</div>
+        {% endif %}
+        
+        {% if image_url %}
+            <div class="results">
+                <div class="image-container">
+                    <h2>Prediction Results for {{ stock_name }}</h2>
+                    <img src="{{ image_url }}" alt="Stock Prediction Plot">
+                </div>
+                <div class="right-panel">
+                    <div class="attributes">
+                        <h3>----------------------------------------------------</h3>
+                        <h3>Buy/Sell Recommendation</h3>
+                        <p><strong>Recommendation:</strong> {{ recommendation }}</p>
+                        <p><strong>Confidence:</strong> {{ confidence }}</p>
+                        <p><strong>Expected Price Change:</strong> {{ pct_change }}%</p>
+                        <p><strong>Latest Price:</strong> {{ currency }}{{ latest_price }}</p>
+                        <p><strong>Avg. Predicted Price:</strong> {{ currency }}{{ avg_predicted }}</p>
+                        <h3>----------------------------------------------------</h3>
+                    </div>
+                    <div class="metrics-container">
+                        <div class="metric-box">
+                            <h3>MAE:Error</h3>
+                            <p>{{ accuracy_metrics.mae }}</p>
+                        </div>
+                        <div class="metric-box">
+                            <h3>RMSE:Deviation</h3>
+                            <p>{{ accuracy_metrics.rmse }}</p>
+                        </div>
+                        <div class="metric-box">
+                            <h3>R²Score:Fit</h3>
+                            <p>{{ accuracy_metrics.r2 }}</p>
+                        </div>
+                        <div class="metric-box">
+                            <h3>MAPE:Percentage</h3>
+                            <p>{{ accuracy_metrics.mape }}%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #fadbd8;
+            border-radius: 4px;
+        }
+        .instructions {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #7f8c8d;
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .metrics-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .metric-box {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            width: 200px;
+            margin: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Price Prediction</h1>
+        <p class="instructions">Enter a stock symbol (e.g., AAPL, TSLA) to predict future prices.</p>
+        
+        <form method="POST" action="{% url 'predict' %}">
+            {% csrf_token %}
+            <input type="text" name="stock_name" placeholder="Enter stock symbol" required>
+            <button type="submit">Predict</button>
+        </form>
+        
+        {% if error_message %}
+            <div class="error">{{ error_message }}</div>
+        {% endif %}
+        
+        {% if image_url %}
+            <div class="results">
+                <h2>Prediction Results for {{ stock_name }}</h2>
+                <img src="{{ image_url }}" alt="Stock Prediction Plot">
+                
+                <div class="metrics-container">
+                    <div class="metric-box">
+                        <h3>MAE</h3>
+                        <p>{{ accuracy_metrics.mae }}</p>
+                    </div>
+                    <div class="metric-box">
+                        <h3>RMSE</h3>
+                        <p>{{ accuracy_metrics.rmse }}</p>
+                    </div>
+                    <div class="metric-box">
+                        <h3>R² Score</h3>
+                        <h5>(Accuracy of model)</h5>
+                        <p>{{ accuracy_metrics.r2 }}</p>
+                    </div>
+                    <div class="metric-box">
+                        <h3>MAPE</h3>
+                        <p>{{ accuracy_metrics.mape }}%</p>
+                    </div>
+                </div>
+                
+                <h3>Buy/Sell Recommendation</h3>
+                <p><strong>Recommendation:</strong> {{ recommendation }}</p>
+                <p><strong>Confidence:</strong> {{ confidence }}</p>
+                <p><strong>Probability of occurrence :</strong> {{ pct_change }}%</p>
+                <p><strong>Latest Price:</strong> ${{ latest_price }}</p>
+                <p><strong>Avg. Predicted Price:</strong> ${{ avg_predicted }}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+-->
